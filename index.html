@@ -1,15 +1,17 @@
 <title>Ақпараттың өлшем бірліктері — 7-сынып</title>
 <style>
   :root{
-    --bg:#030503;
-    --screen:#050a06;
-    --phosphor:#3dff77;
-    --phosphor-dim:#1f7a3d;
-    --phosphor-glow:rgba(61,255,119,.5);
-    --amber:#ffcf4d;
+    --bg:#060503;
+    --screen:#0a0806;
+    --phosphor:#ffb300;
+    --phosphor-dim:#8a6420;
+    --phosphor-glow:rgba(255,179,0,.45);
+    --cyan:#5fd6ff;
+    --green:#3ecf6e;
+    --green-glow:rgba(62,207,110,.5);
     --red:#ff5c5c;
     --red-glow:rgba(255,92,92,.5);
-    --ring:#3dff77;
+    --ring:#ffb300;
     --shadow:0 24px 60px -22px rgba(0,0,0,.85);
   }
 
@@ -57,7 +59,7 @@
   @keyframes blink{ 50%{opacity:0;} }
   @media (prefers-reduced-motion: reduce){ .cursor{animation:none;} }
   .objective{margin:0;font-size:.82rem;line-height:1.6;color:var(--phosphor-dim);max-width:60ch;}
-  .objective__code{color:var(--amber);font-weight:700;}
+  .objective__code{color:var(--cyan);font-weight:700;}
 
   /* ---------- byte meter ---------- */
   .meterbar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:20px 0 18px;}
@@ -91,7 +93,7 @@
   /* ---------- log entry card ---------- */
   .card{border:1px solid var(--phosphor-dim);padding:14px 14px 12px;}
   .card__top{display:flex;gap:8px;margin-bottom:10px;}
-  .card__num{flex:none;color:var(--amber);font-weight:700;font-size:.82rem;}
+  .card__num{flex:none;color:var(--cyan);font-weight:700;font-size:.82rem;}
   .card__q{margin:0;font-size:.9rem;line-height:1.55;color:var(--phosphor);}
 
   .card__options{display:grid;gap:6px;grid-template-columns:1fr;margin-top:2px;}
@@ -105,7 +107,7 @@
   .optline:hover{color:var(--phosphor);border-color:var(--phosphor);}
   .optline.tf{text-align:center;font-weight:700;}
   .optline.is-selected{color:var(--phosphor);}
-  .optline.is-correct{background:rgba(61,255,119,.12);border-color:var(--phosphor);color:var(--phosphor);text-shadow:0 0 6px var(--phosphor-glow);}
+  .optline.is-correct{background:rgba(62,207,110,.12);border-color:var(--green);color:var(--green);text-shadow:0 0 6px var(--green-glow);}
   .optline.is-wrong{background:rgba(255,92,92,.12);border-color:var(--red);color:var(--red);text-shadow:0 0 6px var(--red-glow);}
 
   /* ---------- command keys ---------- */
@@ -115,8 +117,8 @@
     background:transparent;color:var(--phosphor-dim);border:1px solid var(--phosphor-dim);
     padding:6px 12px;transition:all .15s ease;
   }
-  .cmdkey.is-on{background:var(--amber);border-color:var(--amber);color:#2b1c00;font-weight:700;}
-  .cmdkey.answer.is-on{background:var(--phosphor);border-color:var(--phosphor);color:#02150a;}
+  .cmdkey.is-on{background:var(--cyan);border-color:var(--cyan);color:#00202b;font-weight:700;}
+  .cmdkey.answer.is-on{background:var(--phosphor);border-color:var(--phosphor);color:#2b1c00;}
 
   .card__reveal{margin-top:10px;padding:9px 11px;font-size:.82rem;line-height:1.55;border-left:2px solid var(--phosphor-dim);color:var(--phosphor-dim);}
   .card__reveal::before{content:">> ";color:var(--phosphor);}
