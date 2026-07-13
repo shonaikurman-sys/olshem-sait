@@ -1,0 +1,533 @@
+<title>Ақпараттың өлшем бірліктері — 7-сынып</title>
+<style>
+  :root{
+    --bg:#030503;
+    --screen:#050a06;
+    --phosphor:#3dff77;
+    --phosphor-dim:#1f7a3d;
+    --phosphor-glow:rgba(61,255,119,.5);
+    --amber:#ffcf4d;
+    --red:#ff5c5c;
+    --red-glow:rgba(255,92,92,.5);
+    --ring:#3dff77;
+    --shadow:0 24px 60px -22px rgba(0,0,0,.85);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    min-height:100vh;
+    background:
+      repeating-linear-gradient(180deg, rgba(0,0,0,.35) 0 1px, transparent 1px 3px),
+      radial-gradient(90vw 60vh at 50% 0%, rgba(61,255,119,.05), transparent 65%),
+      var(--bg);
+    color:var(--phosphor);
+    font-family:"Consolas","Courier New",monospace;
+    padding:26px 14px 64px;
+    overflow-x:hidden;
+  }
+  .wrap{max-width:900px;margin:0 auto;}
+
+  .crt{
+    background:var(--screen);
+    border:2px solid var(--phosphor-dim);
+    border-radius:4px;
+    box-shadow:var(--shadow), inset 0 0 60px rgba(61,255,119,.05);
+    padding:0;
+  }
+  .statusbar{
+    display:flex;align-items:center;gap:10px;padding:10px 16px;
+    border-bottom:1px solid var(--phosphor-dim);
+    font-size:.68rem;letter-spacing:.08em;color:var(--phosphor-dim);text-transform:uppercase;
+  }
+  .statusbar .dot{width:7px;height:7px;border-radius:50%;background:var(--phosphor);box-shadow:0 0 6px var(--phosphor-glow);}
+  .statusbar .right{margin-left:auto;}
+
+  .screen{padding:22px 16px 26px;}
+  @media (min-width:560px){ .screen{padding:28px 26px 32px;} }
+
+  /* ---------- header ---------- */
+  .hud{padding-bottom:16px;border-bottom:1px dashed var(--phosphor-dim);}
+  .eyebrow{margin:0 0 8px;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--phosphor-dim);}
+  h1{
+    margin:0 0 10px;font-size:clamp(1.15rem,3.6vw,1.6rem);font-weight:700;line-height:1.3;
+    color:var(--phosphor);text-shadow:0 0 8px var(--phosphor-glow);
+  }
+  .cursor{display:inline-block;width:.5em;background:var(--phosphor);animation:blink 1s steps(1) infinite;margin-left:2px;}
+  @keyframes blink{ 50%{opacity:0;} }
+  @media (prefers-reduced-motion: reduce){ .cursor{animation:none;} }
+  .objective{margin:0;font-size:.82rem;line-height:1.6;color:var(--phosphor-dim);max-width:60ch;}
+  .objective__code{color:var(--amber);font-weight:700;}
+
+  /* ---------- byte meter ---------- */
+  .meterbar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:20px 0 18px;}
+  .byte{display:flex;gap:4px;}
+  .byte__seg{width:14px;height:20px;border:1px solid var(--phosphor-dim);background:transparent;}
+  .byte__seg.on{background:var(--phosphor);box-shadow:0 0 8px var(--phosphor-glow);}
+  .meter__readout{font-size:.9rem;color:var(--phosphor);}
+  .resetbtn{
+    margin-left:auto;font:inherit;font-size:.76rem;cursor:pointer;
+    background:transparent;color:var(--phosphor-dim);border:1px solid var(--phosphor-dim);
+    padding:7px 12px;transition:all .15s ease;
+  }
+  .resetbtn:hover{color:var(--red);border-color:var(--red);}
+
+  /* ---------- menu tabs ---------- */
+  .menu{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;}
+  .menuitem{
+    font:inherit;font-size:.82rem;cursor:pointer;
+    background:transparent;color:var(--phosphor-dim);border:1px solid var(--phosphor-dim);
+    padding:9px 14px;transition:all .15s ease;
+  }
+  .menuitem.active{background:var(--phosphor);color:#02150a;border-color:var(--phosphor);font-weight:700;}
+  .menuitem:focus-visible, .resetbtn:focus-visible, .optline:focus-visible, .cmdkey:focus-visible, .navkey:focus-visible{
+    outline:2px solid var(--ring);outline-offset:2px;
+  }
+
+  .panel{display:none;}
+  .panel.active{display:block;}
+  .cards{display:flex;flex-direction:column;gap:16px;}
+
+  /* ---------- log entry card ---------- */
+  .card{border:1px solid var(--phosphor-dim);padding:14px 14px 12px;}
+  .card__top{display:flex;gap:8px;margin-bottom:10px;}
+  .card__num{flex:none;color:var(--amber);font-weight:700;font-size:.82rem;}
+  .card__q{margin:0;font-size:.9rem;line-height:1.55;color:var(--phosphor);}
+
+  .card__options{display:grid;gap:6px;grid-template-columns:1fr;margin-top:2px;}
+  @media (min-width:560px){ .card__options{grid-template-columns:1fr 1fr;} }
+  .optline{
+    text-align:left;font:inherit;font-size:.82rem;cursor:pointer;
+    background:transparent;color:var(--phosphor-dim);
+    border:1px solid var(--phosphor-dim);padding:7px 10px;line-height:1.4;
+    transition:all .15s ease;
+  }
+  .optline:hover{color:var(--phosphor);border-color:var(--phosphor);}
+  .optline.tf{text-align:center;font-weight:700;}
+  .optline.is-selected{color:var(--phosphor);}
+  .optline.is-correct{background:rgba(61,255,119,.12);border-color:var(--phosphor);color:var(--phosphor);text-shadow:0 0 6px var(--phosphor-glow);}
+  .optline.is-wrong{background:rgba(255,92,92,.12);border-color:var(--red);color:var(--red);text-shadow:0 0 6px var(--red-glow);}
+
+  /* ---------- command keys ---------- */
+  .card__cmds{display:flex;gap:8px;margin-top:11px;flex-wrap:wrap;}
+  .cmdkey{
+    font:inherit;font-size:.74rem;cursor:pointer;letter-spacing:.03em;
+    background:transparent;color:var(--phosphor-dim);border:1px solid var(--phosphor-dim);
+    padding:6px 12px;transition:all .15s ease;
+  }
+  .cmdkey.is-on{background:var(--amber);border-color:var(--amber);color:#2b1c00;font-weight:700;}
+  .cmdkey.answer.is-on{background:var(--phosphor);border-color:var(--phosphor);color:#02150a;}
+
+  .card__reveal{margin-top:10px;padding:9px 11px;font-size:.82rem;line-height:1.55;border-left:2px solid var(--phosphor-dim);color:var(--phosphor-dim);}
+  .card__reveal::before{content:">> ";color:var(--phosphor);}
+
+  /* ---------- nav pager ---------- */
+  .pager{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:22px;}
+  .navkey{
+    font:inherit;font-size:.8rem;cursor:pointer;
+    background:transparent;color:var(--phosphor-dim);border:1px solid var(--phosphor-dim);
+    padding:7px 14px;transition:all .15s ease;
+  }
+  .navkey:disabled{opacity:.3;cursor:default;}
+  .navkey:not(:disabled):hover{color:var(--phosphor);border-color:var(--phosphor);}
+  .pager__readout{font-size:.8rem;color:var(--phosphor-dim);}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.001ms !important;transition-duration:.001ms !important;}
+  }
+</style>
+
+<div class="wrap">
+  <div class="crt">
+    <div class="statusbar">
+      <span class="dot"></span> SYS/ADATA-7.EXE
+      <span class="right">MEM OK</span>
+    </div>
+    <div class="screen">
+
+      <header class="hud">
+        <p class="eyebrow">&gt; 7-сынып / ақпараттық-коммуникациялық технологиялар</p>
+        <h1>Ақпараттың өлшем бірліктері<span class="cursor">&nbsp;</span></h1>
+        <p class="objective"><span class="objective__code">[7.2.1.1]</span> Ақпаратты өлшеу бірліктері, ақпаратты бір өлшем бірлігінен басқаға аударуды жүзеге асыру</p>
+      </header>
+
+      <div class="meterbar">
+        <div class="byte" id="byteMeter"></div>
+        <span class="meter__readout" id="scoreText">[00/17]</span>
+        <button class="resetbtn" id="resetBtn" type="button">[ RESET ]</button>
+      </div>
+
+      <nav class="menu" role="tablist">
+        <button class="menuitem active" id="tabBtn-mcq" data-tab="mcq" role="tab" aria-selected="true" type="button">[1] СҰРАҚТАР · 10</button>
+        <button class="menuitem" id="tabBtn-tf" data-tab="tf" role="tab" aria-selected="false" type="button">[2] ДҰРЫС / БҰРЫС · 7</button>
+      </nav>
+
+      <main>
+        <section class="panel active" id="panel-mcq" role="tabpanel">
+          <div class="cards" id="mcqCards"></div>
+          <div class="pager" id="mcqPager"></div>
+        </section>
+        <section class="panel" id="panel-tf" role="tabpanel">
+          <div class="cards" id="tfCards"></div>
+          <div class="pager" id="tfPager"></div>
+        </section>
+      </main>
+
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var LETTERS = ["А","Ә","Б","В"];
+
+  var mcq = [
+    {
+      q:"Ақпараттың ең кіші өлшем бірлігі қандай?",
+      options:["Байт","Килобайт","Бит","Мегабайт"],
+      correct:2,
+      hint:"Ол тек 0 немесе 1 мәнін қабылдайды.",
+      answer:"Жауабы — Б. Бит — ақпараттың ең кіші өлшем бірлігі, тек 0 немесе 1 мәнін қабылдайды."
+    },
+    {
+      q:"1 байт неше битке тең?",
+      options:["8 бит","10 бит","100 бит","1024 бит"],
+      correct:0,
+      hint:"Байт — биттердің белгілі тобы, саны 2-нің дәрежесі.",
+      answer:"Жауабы — А. 1 байт = 8 бит."
+    },
+    {
+      q:"1 килобайт (Кбайт) неше байтқа тең?",
+      options:["100 байт","500 байт","8 байт","1024 байт"],
+      correct:3,
+      hint:"Информатикада 1024 саны жиі кездеседі (2 дәрежесі).",
+      answer:"Жауабы — В. 1 Кбайт = 1024 байт."
+    },
+    {
+      q:"1 мегабайт (Мбайт) неше килобайтқа тең?",
+      options:["1000 Кбайт","1024 Кбайт","100 Кбайт","8 Кбайт"],
+      correct:1,
+      hint:"Әр келесі бірлік алдыңғысынан 1024 есе үлкен.",
+      answer:"Жауабы — Ә. 1 Мбайт = 1024 Кбайт."
+    },
+    {
+      q:"Мына бірліктердің қайсысы ең үлкені?",
+      options:["Килобайт","Байт","Гигабайт","Бит"],
+      correct:2,
+      hint:"Гига- деген ірі бірлікті білдіреді.",
+      answer:"Жауабы — Б. Гигабайт — тізімдегі ең үлкен бірлік (1 Гбайт = 1024 Мбайт)."
+    },
+    {
+      q:"500 Мбайт файлды Гбайтқа айналдырсақ, ол шамамен нешеге тең?",
+      options:["500 Гбайт","5 Гбайт","50 Гбайт","0,49 Гбайт шамасында"],
+      correct:3,
+      hint:"500-ді 1024-ке бөл (Мбайтты Гбайтқа айналдыру үшін).",
+      answer:"Жауабы — В. 500 ÷ 1024 ≈ 0,49 Гбайт."
+    },
+    {
+      q:"2 Кбайт неше байтқа тең?",
+      options:["2048 байт","200 байт","20 байт","2000 байт"],
+      correct:0,
+      hint:"2 × 1024 неше болады?",
+      answer:"Жауабы — А. 2 Кбайт = 2 × 1024 = 2048 байт."
+    },
+    {
+      q:"Терабайт (Тбайт) қандай бірліктен тұрады?",
+      options:["1024 байт","1024 Гбайт","1024 бит","1024 Мбайт"],
+      correct:1,
+      hint:"Тера- гигадан кейінгі, одан да ірі бірлік.",
+      answer:"Жауабы — Ә. 1 Тбайт = 1024 Гбайт."
+    },
+    {
+      q:"Неге ақпарат көлемін дұрыс өлшем бірлігімен көрсету маңызды?",
+      options:["Маңызды емес, кез келгенін жазуға болады","Тек әдемі көрну үшін","Файл көлемін дәл әрі түсінікті түрде білу үшін","Компьютерді баяулату үшін"],
+      correct:2,
+      hint:"Дұрыс бірлік файлдың нақты көлемін көрсете ме?",
+      answer:"Жауабы — Б. Дұрыс бірлік файл көлемін дәл және түсінікті етіп көрсетеді."
+    },
+    {
+      q:"8192 бит нешеге тең (байтпен)?",
+      options:["8 байт","80 байт","800 байт","1024 байт"],
+      correct:3,
+      hint:"8192-ні 8-ге бөл (1 байт = 8 бит).",
+      answer:"Жауабы — В. 8192 ÷ 8 = 1024 байт."
+    }
+  ];
+
+  var tf = [
+    {q:"Бит — ақпараттың ең кіші өлшем бірлігі.", correct:true,
+     hint:"Одан кіші бірлік бар ма?", answer:"Дұрыс. Бит — ең кіші өлшем бірлігі, 0 немесе 1 мәнін қабылдайды."},
+    {q:"1 байт 10 битке тең.", correct:false,
+     hint:"1 байт неше битке тең екенін еске түсір.", answer:"Бұрыс. 1 байт = 8 бит, 10 бит емес."},
+    {q:"1 Кбайт 1024 байтқа тең.", correct:true,
+     hint:"Информатикада 1024 саны жиі қолданыла ма?", answer:"Дұрыс. 1 Кбайт = 1024 байт."},
+    {q:"Гигабайт мегабайттан үлкен өлшем бірлігі.", correct:true,
+     hint:"Гига- мега-дан үлкен бе, кіші ме?", answer:"Дұрыс. 1 Гбайт = 1024 Мбайт, яғни гигабайт мегабайттан үлкен."},
+    {q:"Ақпарат көлемінің өлшем бірліктерін білудің қажеті жоқ.", correct:false,
+     hint:"Файл көлемін дұрыс бағалау үшін бірліктерді білу керек пе?", answer:"Бұрыс. Өлшем бірліктерін білу файл көлемін дұрыс бағалауға көмектеседі."},
+    {q:"Терабайт — гигабайттан кіші бірлік.", correct:false,
+     hint:"Тера- гигадан кейін келе ме?", answer:"Бұрыс. Терабайт гигабайттан үлкен: 1 Тбайт = 1024 Гбайт."},
+    {q:"2048 байтты килобайтқа айналдырсақ, 2 Кбайт шығады.", correct:true,
+     hint:"2048-ді 1024-ке бөл.", answer:"Дұрыс. 2048 ÷ 1024 = 2 Кбайт."}
+  ];
+
+  var PAGE_SIZE_MCQ = 5;
+  var PAGE_SIZE_TF = 4;
+  var TOTAL = mcq.length + tf.length;
+
+  var state = {
+    mcqSel: mcq.map(function(){return null;}),
+    tfSel: tf.map(function(){return null;}),
+    mcqHint: mcq.map(function(){return false;}),
+    mcqAns: mcq.map(function(){return false;}),
+    tfHint: tf.map(function(){return false;}),
+    tfAns: tf.map(function(){return false;}),
+    mcqPage: 0,
+    tfPage: 0
+  };
+
+  function buildByteMeter(){
+    var el = document.getElementById("byteMeter");
+    for(var i=0;i<8;i++){
+      var seg = document.createElement("span");
+      seg.className = "byte__seg";
+      el.appendChild(seg);
+    }
+  }
+
+  function totalScore(){
+    var s = 0;
+    mcq.forEach(function(item, i){ if(state.mcqSel[i] === item.correct) s++; });
+    tf.forEach(function(item, i){ if(state.tfSel[i] === item.correct) s++; });
+    return s;
+  }
+
+  function updateScore(){
+    var s = totalScore();
+    document.getElementById("scoreText").textContent = "[" + (s<10?"0"+s:s) + "/" + TOTAL + "]";
+    var pct = s / TOTAL;
+    var lit = Math.round(pct * 8);
+    var segs = document.querySelectorAll(".byte__seg");
+    segs.forEach(function(seg, i){ seg.classList.toggle("on", i < lit); });
+  }
+
+  function buildMcqCard(item, i){
+    var card = document.createElement("article");
+    card.className = "card";
+
+    var top = document.createElement("div");
+    top.className = "card__top";
+    var num = document.createElement("span");
+    num.className = "card__num";
+    num.textContent = ">" + (i+1 < 10 ? "0"+(i+1) : (i+1));
+    var q = document.createElement("p");
+    q.className = "card__q";
+    q.textContent = item.q;
+    top.appendChild(num); top.appendChild(q);
+    card.appendChild(top);
+
+    var opts = document.createElement("div");
+    opts.className = "card__options";
+    item.options.forEach(function(text, oi){
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "optline";
+      b.textContent = "[" + LETTERS[oi] + "] " + text;
+      applyOptState(b, oi, item, state.mcqSel[i]);
+      b.addEventListener("click", function(){
+        state.mcqSel[i] = oi;
+        Array.prototype.forEach.call(opts.children, function(child, ci){
+          applyOptState(child, ci, item, oi);
+        });
+        updateScore();
+      });
+      opts.appendChild(b);
+    });
+    card.appendChild(opts);
+
+    card.appendChild(buildCmds(i, item, state.mcqHint, state.mcqAns));
+    return card;
+  }
+
+  function applyOptState(btn, oi, item, selected){
+    btn.classList.remove("is-selected","is-correct","is-wrong");
+    if(selected === null || selected === undefined) return;
+    if(oi === selected){
+      btn.classList.add("is-selected");
+      btn.classList.add(oi === item.correct ? "is-correct" : "is-wrong");
+    } else if(oi === item.correct){
+      btn.classList.add("is-correct");
+    }
+  }
+
+  function buildTfCard(item, i){
+    var card = document.createElement("article");
+    card.className = "card";
+
+    var top = document.createElement("div");
+    top.className = "card__top";
+    var num = document.createElement("span");
+    num.className = "card__num";
+    num.textContent = ">" + (i+1 < 10 ? "0"+(i+1) : (i+1));
+    var q = document.createElement("p");
+    q.className = "card__q";
+    q.textContent = item.q;
+    top.appendChild(num); top.appendChild(q);
+    card.appendChild(top);
+
+    var opts = document.createElement("div");
+    opts.className = "card__options";
+    [["ДҰРЫС", true], ["БҰРЫС", false]].forEach(function(pair){
+      var text = pair[0], val = pair[1];
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "optline tf";
+      b.textContent = "[ " + text + " ]";
+      applyTfState(b, item, val, state.tfSel[i]);
+      b.addEventListener("click", function(){
+        state.tfSel[i] = val;
+        Array.prototype.forEach.call(opts.children, function(child, ci){
+          applyTfState(child, item, [true,false][ci], val);
+        });
+        updateScore();
+      });
+      opts.appendChild(b);
+    });
+    card.appendChild(opts);
+
+    card.appendChild(buildCmds(i, item, state.tfHint, state.tfAns));
+    return card;
+  }
+
+  function applyTfState(btn, item, ownVal, selected){
+    btn.classList.remove("is-selected","is-correct","is-wrong");
+    if(selected === null || selected === undefined) return;
+    if(ownVal === selected){
+      btn.classList.add("is-selected");
+      btn.classList.add(ownVal === item.correct ? "is-correct" : "is-wrong");
+    } else if(ownVal === item.correct){
+      btn.classList.add("is-correct");
+    }
+  }
+
+  function buildCmds(i, item, hintArr, ansArr){
+    var wrap = document.createElement("div");
+    var row = document.createElement("div");
+    row.className = "card__cmds";
+
+    var hintBtn = document.createElement("button");
+    hintBtn.type = "button";
+    hintBtn.className = "cmdkey hint" + (hintArr[i] ? " is-on" : "");
+    hintBtn.textContent = "[ HINT ]";
+
+    var ansBtn = document.createElement("button");
+    ansBtn.type = "button";
+    ansBtn.className = "cmdkey answer" + (ansArr[i] ? " is-on" : "");
+    ansBtn.textContent = "[ KEY ]";
+
+    row.appendChild(hintBtn); row.appendChild(ansBtn);
+    wrap.appendChild(row);
+
+    var hintBox = document.createElement("div");
+    hintBox.className = "card__reveal";
+    hintBox.textContent = item.hint;
+    hintBox.hidden = !hintArr[i];
+
+    var ansBox = document.createElement("div");
+    ansBox.className = "card__reveal";
+    ansBox.textContent = item.answer;
+    ansBox.hidden = !ansArr[i];
+
+    hintBtn.addEventListener("click", function(){
+      hintArr[i] = !hintArr[i];
+      hintBox.hidden = !hintArr[i];
+      hintBtn.classList.toggle("is-on", hintArr[i]);
+    });
+    ansBtn.addEventListener("click", function(){
+      ansArr[i] = !ansArr[i];
+      ansBox.hidden = !ansArr[i];
+      ansBtn.classList.toggle("is-on", ansArr[i]);
+    });
+
+    wrap.appendChild(hintBox);
+    wrap.appendChild(ansBox);
+    return wrap;
+  }
+
+  function renderPage(kind){
+    var isMcq = kind === "mcq";
+    var data = isMcq ? mcq : tf;
+    var pageSize = isMcq ? PAGE_SIZE_MCQ : PAGE_SIZE_TF;
+    var page = isMcq ? state.mcqPage : state.tfPage;
+    var container = document.getElementById(isMcq ? "mcqCards" : "tfCards");
+    var pagerEl = document.getElementById(isMcq ? "mcqPager" : "tfPager");
+
+    var pageCount = Math.ceil(data.length / pageSize);
+    var start = page * pageSize;
+    var end = Math.min(start + pageSize, data.length);
+
+    container.innerHTML = "";
+    for(var i = start; i < end; i++){
+      container.appendChild(isMcq ? buildMcqCard(data[i], i) : buildTfCard(data[i], i));
+    }
+
+    pagerEl.innerHTML = "";
+    if(pageCount > 1){
+      var prev = document.createElement("button");
+      prev.type = "button";
+      prev.className = "navkey";
+      prev.textContent = "[ < PREV ]";
+      prev.disabled = page === 0;
+      prev.addEventListener("click", function(){
+        if(isMcq){ state.mcqPage--; } else { state.tfPage--; }
+        renderPage(kind);
+      });
+
+      var readout = document.createElement("span");
+      readout.className = "pager__readout";
+      readout.textContent = "PAGE " + (page+1) + "/" + pageCount;
+
+      var next = document.createElement("button");
+      next.type = "button";
+      next.className = "navkey";
+      next.textContent = "[ NEXT > ]";
+      next.disabled = page === pageCount - 1;
+      next.addEventListener("click", function(){
+        if(isMcq){ state.mcqPage++; } else { state.tfPage++; }
+        renderPage(kind);
+      });
+
+      pagerEl.appendChild(prev);
+      pagerEl.appendChild(readout);
+      pagerEl.appendChild(next);
+    }
+  }
+
+  function switchTab(target){
+    ["mcq","tf"].forEach(function(k){
+      var isTarget = k === target;
+      document.getElementById("tabBtn-" + k).classList.toggle("active", isTarget);
+      document.getElementById("tabBtn-" + k).setAttribute("aria-selected", isTarget ? "true" : "false");
+      document.getElementById("panel-" + k).classList.toggle("active", isTarget);
+    });
+  }
+
+  document.getElementById("tabBtn-mcq").addEventListener("click", function(){ switchTab("mcq"); });
+  document.getElementById("tabBtn-tf").addEventListener("click", function(){ switchTab("tf"); });
+
+  document.getElementById("resetBtn").addEventListener("click", function(){
+    state.mcqSel = mcq.map(function(){return null;});
+    state.tfSel = tf.map(function(){return null;});
+    renderPage("mcq");
+    renderPage("tf");
+    updateScore();
+  });
+
+  buildByteMeter();
+  renderPage("mcq");
+  renderPage("tf");
+  updateScore();
+})();
+</script>
